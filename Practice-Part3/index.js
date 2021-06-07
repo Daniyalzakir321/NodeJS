@@ -1,15 +1,37 @@
 const express= require('express')
+const cookieParser = require('cookie-parser')
+const morgan = require('morgan')
 const app= express();
 app.use(express.json());
+// app.use(express.urlencoded())
+// app.use(express.text())
+// app.use(express.static('./public'))
+app.use(cookieParser())
+app.use(morgan('tiny'))
+
 PORT= process.env | 3000
 app.listen(PORT,()=>{
     console.log('listening on port',PORT)
 })
 
+// app.get('/api', ( req, res )=>{
+//      res.cookie("keys","values")
+//      res.cookie("cookie1","value1")
+//      res.cookie("cookie2","value2")
+//     res.status(200).send('COOKIES SEND')
+// })
+
+// app.get('/api/cookie', ( req, res )=>{
+//    res.status(200).send(req.cookies)
+// })
+
+
+
+
 employee=[
-{ id:'1', name:'Daniyal'},
-{ id:'2', name:'Zayan'},
-{ id:'3',name:'Basiq'},
+{ id:1, name:'Daniyal'},
+{ id:2, name:'Zayan'},
+{ id:3,name:'Basiq'},
 ]
 
 app.get('/', ( req, res )=>{
@@ -89,3 +111,4 @@ app.get('/api/employee', ( req, res )=>{
     console.log("NAME:"+qp.name, " ORDERBY:"+qp.orderby, " PAGE:"+qp.page)
     res.status(200).send(qp)
 })
+
