@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema({
     // phone: [String],
     // isAdmin: Boolean
 })
-userSchema.plugin(autoIncrement.plugin, 'userdbname');
-const Userdb = mongoose.model('userdbname', userSchema)
+userSchema.plugin(autoIncrement.plugin, 'userdbnames');
+const Userdb = mongoose.model('userdbnames', userSchema)
 
 
 
@@ -18,8 +18,8 @@ const salarySchema = new mongoose.Schema({
     salary: Boolean,
     rupees: Number
 })
-salarySchema.plugin(autoIncrement.plugin, 'salary');
-const Salarydb = mongoose.model('salary', salarySchema)
+salarySchema.plugin(autoIncrement.plugin, 'salaries');
+const Salarydb = mongoose.model('salaries', salarySchema)
 
 
 module.exports = {Userdb, Salarydb};

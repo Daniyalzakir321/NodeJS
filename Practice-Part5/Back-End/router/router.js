@@ -2,12 +2,6 @@ const router = require('express').Router();
 const router2 = require('express').Router();
 const {getData, postData, putData, deleteData, deleteAllData} =require('../controller/controller.js')
 
-const employee = [
-    { id: 1, name: 'Daniyal' },
-    { id: 2, name: 'Zayan' },
-    { id: 3, name: 'Basiq' },
-]
-
 router.get('/', getData )
 
 router.post('/api/employee', postData)

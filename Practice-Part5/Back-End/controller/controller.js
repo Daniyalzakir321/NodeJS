@@ -1,9 +1,8 @@
 const { Userdb, Salarydb } = require('../model/schema.js')
 
 const getData = async (req, res) => {
-    // res.status(200).send(employee)
     try {
-        let user = await Userdb.find()
+        let user = await Userdb.find().sort({_id: 1}) 
         res.status(200).json(user)
     }
     catch (error) {
@@ -16,15 +15,6 @@ const postData = async (req, res) => {
     let salary = req.body.salary
     let rupees = req.body.rupees
     console.log(name, salary, rupees, req.body)
-    // if (name) {
-    //     let emp = {
-    //         id: employee.length + 1,
-    //         name: name
-    //     }
-    //     employee.push(emp)
-    //     res.status(200).send(emp)
-    // }
-    // res.status(400).send("Not Found")
     try {
         if (name) {
             const user = new Userdb({
@@ -53,17 +43,6 @@ const putData = async (req, res) => {
     let id = req.params.id
     let name = req.body.name
     console.log(id, name)
-    // let index = employee.findIndex((i) => {
-    //     return (i.id == id)
-    // })
-    // if (index >= 0) {
-    //     let record = employee[index]
-    //     record.name = name
-    //     res.status(200).send(record)
-    // }
-    // else {
-    //     res.status(400).send('Index Not Found')
-    // }
     try {
         const user = await Userdb.findById(id)
         if (user) {
@@ -78,39 +57,10 @@ const putData = async (req, res) => {
         res.status(400).json({ message: error.message })
     }
 }
-// OR
-// const putData = (req, res) => {
-//     let id = +req.params.id
-//     let name = req.body.name
-//     let index = employee.find((i) => {
-//         return (i.id == id)
-//     })
-//     console.log(name)
-//     if (index.id >= 0) {
-//         index.name = name
-//         res.status(200).send(index)
-//     }
-//     else {
-//         res.status(400).send('Index Not Found')
-//     }
-// }
 
 const deleteData = async (req, res) => {
     let id = req.params.id
     console.log(id)
-    // let index = employee.findIndex((i) => {
-    //     if (i.id == id) {
-    //         return i
-    //     }
-    // })
-    // if (index >= 0) {
-    //     let record = employee[index]
-    //     employee.splice(index, 1)
-    //     res.status(200).send(record)
-    // }
-    // else {
-    //     res.status(400).send('Index Not Found')
-    // }
     try {
         const user = await Userdb.findById(id)
         if (user) {
@@ -125,16 +75,9 @@ const deleteData = async (req, res) => {
 }
 
 const deleteAllData = async (req, res) => {
-    // if (employee) {
-    //     employee.remove()
-    //     res.status(200).send(record)
-    // }
-    // else {
-    //     res.status(400).send('Index Not Found')
-    // }
     try {
         if (Userdb) {
-            let result = await Userdb.collection.delete()
+            let result = await Userdb.collection.drop()            
             console.log(result)
             res.status(200).json(result)
         }
@@ -146,3 +89,83 @@ const deleteAllData = async (req, res) => {
 }
 
 module.exports = { getData, postData, putData, deleteData, deleteAllData };
+
+
+
+// async function createUser() {
+//     const user = new Userdb({
+//         name: 'Daniyal',
+//         age: 24,
+//         email: 'daniyalzakir03@gmail.com',
+//         phone: ['0132231321', '0324423432'],
+//         isAdmin: false,
+//     })
+//     const result = await user.save()
+//     console.log(result)
+// }
+// createUser()
+
+
+
+// async function update(id){
+//     const result= await Userdb.update({_id: id}, {
+//     $set:{   
+//         name="hello",
+//         isAdmin=false
+//     },
+//     $inc:{   
+//         age= 1    //-1 for decrease
+//     },
+// }, {new: true}// to retrieve new updated value
+// )
+// console.log(result) // to use console findByIdAndUpdate()
+// // OR
+// const user= await Userdb.findById(id) 
+// if(user){
+//    user.name="hello"
+//    user.isAdmin="false"
+//     let result= await user.save() 
+//     console.log(result) }
+// return
+// }
+// update('_4edfsfsa32d324drs')
+
+
+
+// async function getUsers(){
+//     let page= 4
+//     let limit= 10
+// const result= await Userdb.find()   
+// const result= await User.findById('_4edfsfsa32d324drs')   
+// const result= await User.find()
+// .skip((page-1) * limit).select('_id').limit(limit)  // formula to get pagignation
+// .skip(2) //skip starting 2 records
+// .countDocuments() // doc counts
+// .and([{name: 'Daniyal'}, {isAdmin: false}])  //.or([{isAdmin: false}])
+// .select({name: 1,_id: 0})  //0 =>don't select,    1 =>select
+// .sort({name: 1}) //acending order
+// .limit(1)
+// .sort({name: -1}) //acending order   
+// console.log(result)
+// }
+// getUsers()
+
+
+
+
+
+
+// mongoose.connect(process.env.DATABASE, {
+//     useCreateIndex: true,
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// })
+//     .then(() => {
+//         console.log('MongoDB Connection Succeeded.')
+//     })
+//     .catch(err => {
+//         console.log('Error in DB connection: ' + err)
+//     })
+
+// mongoose.Promise = global.Promise;
+// Connect MongoDB at default port 27017.

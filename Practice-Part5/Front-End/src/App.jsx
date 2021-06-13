@@ -11,10 +11,12 @@ import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import axios from 'axios';
 
 function App() {
+  // const baseUrl= 'https://employeetodo.herokuapp.com/'
+  const baseUrl = 'http://localhost:8000'
 
   const [todos, setTodos] = useState([])
   const [text, setText] = useState('')
-  const employee =  { name: text, salary: true, rupees: 100000 }
+  const employee = { name: text, salary: true, rupees: 100000 }
 
   useEffect(() => {
     getData()
@@ -22,7 +24,7 @@ function App() {
 
   // Get  
   const getData = async () => {
-    await axios.get('http://localhost:8000/')
+    await axios.get(baseUrl)
       .then((result) => {
         console.log(result.data)
         setTodos(result.data)
@@ -33,7 +35,7 @@ function App() {
   const Add = async (e) => {
     e.preventDefault()
     console.log(text)
-    await axios.post('http://localhost:8000/api/employee/', employee)
+    await axios.post(`${baseUrl}/api/employee/`, employee)
       .then((result) => {
         console.log(result)
         getData()
@@ -45,7 +47,7 @@ function App() {
     console.log(id)
     const modify = prompt('Enter Todo To Add', dname)
     if (modify) {
-      await axios.put(`http://localhost:8000/api/employee/${id}`, { name: modify })
+      await axios.put(`${baseUrl}/api/employee/${id}`, { name: modify })
         .then((result) => {
           console.log(result)
           getData()
@@ -57,7 +59,7 @@ function App() {
   // Delete
   const Delete = async (id) => {
     console.log(id)
-    await axios.delete(`http://localhost:8000/api/employee/${id}`)
+    await axios.delete(`${baseUrl}/api/employee/${id}`)
       .then(() => {
         console.log('success')
         getData()
@@ -68,7 +70,7 @@ function App() {
 
   // DeleteAll
   const DeleteAll = async () => {
-    await axios.delete('http://localhost:8000/api/employee/deleteall')
+    await axios.delete(`${baseUrl}/api/employee/deleteall`)
       .then(() => {
         console.log('success')
         getData()
