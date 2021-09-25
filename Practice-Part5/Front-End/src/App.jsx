@@ -8,20 +8,38 @@ import Paper from '@material-ui/core/Paper';
 import UpdateIcon from '@material-ui/icons/Update';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
+import MessageOutlinedIcon from '@material-ui/icons/MessageOutlined';
 import axios from 'axios';
+import LogIn from './auth/login'
+import SignUp from './auth/signup'
+
 
 function App() {
-  // const baseUrl= 'https://employeetodo.herokuapp.com/'
+  // const baseUrl= 'https://employeetodo.herokuapp.com'
   const baseUrl = 'http://localhost:8000'
 
   const [todos, setTodos] = useState([])
   const [text, setText] = useState('')
   const employee = { name: text, salary: true, rupees: 100000 }
+  const [log, setLog] = useState(null)
 
-  useEffect(() => {
+  useEffect( async() => {
     getData()
+    
+    await axios.get(`${baseUrl}/auth/checkuser`,
+      {
+        headers: { token: localStorage.getItem("auth-token") }
+      })
+      .then((res) => {
+        console.log('Check User :', res)
+        setLog(res.data._id?res.data._id:null)
+      })
   }, [])
 
+  function Logout(){
+    localStorage.removeItem("auth-token")
+  }
+  
   // Get  
   const getData = async () => {
     await axios.get(baseUrl)
@@ -61,13 +79,7 @@ function App() {
     console.log(id)
     await axios.delete(`${baseUrl}/api/employee/${id}`)
       .then(() => {
-        console.log('success')
-        getData()
-      })
-
-  }
-
-
+        console.log('
   // DeleteAll
   const DeleteAll = async () => {
     await axios.delete(`${baseUrl}/api/employee/deleteall`)
@@ -78,9 +90,25 @@ function App() {
   }
 
 
+  const vonageMessage = async () => {
+    console.log('vonagemessage')
+    await axios.post(`${baseUrl}/vonagemessage`)
+      .then(() => {
+        console.log('success')
+      })
+  }
+
   return (
     <div>
-      <h1 className="Todo__Header">☑ TODO APP WITH Node JS</h1>
+      <h1 className="Todo__Header">☑ TODO APP WITH Node JS<Button variant="outlined" color="primary" size="medium" onClick={() => vonageMessage()}> <MessageOutlinedIcon /> </Button> </h1>
+      {log?<>{`You are LogIn : ${log}`}
+      <Button  variant="contained" 
+      color="primary" 
+      onClick={()=>Logout()}>
+        Logout</Button></>
+      :
+      <> <SignUp /><LogIn /></>}
+
       <form>
         <Paper elevation={5} className="Add__Todo">
           <TextField className="Text__Field" label="Enter Todos" value={text} onChange={(e) => setText(e.target.value)}
@@ -103,9 +131,17 @@ function App() {
         </Paper>
       })
       }
+
+      <div>
+        {/* <iframe src="https://tokbox.com/embed/embed/ot-embed.js?embedId=6b42a9bc-0387-48c1-a826-888b5a1abf21&room=DEFAULT_ROOM&iframe=true" width="700" height="500" scrolling="auto" allow="microphone; camera"></iframe> */}
+      </div>
     </div>
   );
 }
 
 export default App;
+
+
+
+
 

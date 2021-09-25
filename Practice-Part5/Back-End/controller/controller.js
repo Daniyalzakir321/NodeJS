@@ -1,9 +1,41 @@
+const Vonage = require('@vonage/server-sdk')
 const { Userdb, Salarydb } = require('../model/schema.js')
+const { client } = require('../index')
+
+const vonageMessage = (req, res) => {
+    const vonage = new Vonage({
+        apiKey: "3f0540e7",
+        apiSecret: "rkLwbOB1rd805AXL"
+    })
+
+    const from = "Todo NodeJS"
+    const to = "923128793647"
+    const text = 'A text message sent using the \nVonage SMS API. \nYour Meeting will be scheduled on this Monday at 12:00pm. \nThanks Regards \nVonage '
+    vonage.message.sendSms(from, to, text, (err, responseData) => {
+        if (err) {
+            console.log(err);
+        } else {
+            if (responseData.messages[0]['status'] === "0") {
+                console.log("Message sent successfully.");
+            } else {
+                console.log(`Message failed with error: ${responseData.messages[0]['error-text']}`);
+            }
+        }
+    })
+}
 
 const getData = async (req, res) => {
     try {
-        let user = await Userdb.find().sort({_id: 1}) 
+        // client.set("DATA", async function (err) {
+        //     console.error(err);
+            let user = await Userdb.find().sort({ _id: 1 })
+
+        // });
         res.status(200).json(user)
+        // client.get("hello", function (err) {
+        //     console.error(err); 
+        // });
+
     }
     catch (error) {
         res.status(400).json({ message: error.message })
@@ -77,7 +109,7 @@ const deleteData = async (req, res) => {
 const deleteAllData = async (req, res) => {
     try {
         if (Userdb) {
-            let result = await Userdb.collection.drop()            
+            let result = await Userdb.collection.drop()
             console.log(result)
             res.status(200).json(result)
         }
@@ -88,7 +120,7 @@ const deleteAllData = async (req, res) => {
 
 }
 
-module.exports = { getData, postData, putData, deleteData, deleteAllData };
+module.exports = { getData, postData, putData, deleteData, deleteAllData, vonageMessage };
 
 
 
